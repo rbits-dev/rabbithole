@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Layout from "../componants/common/Layout";
 import * as Yup from "yup";
@@ -6,10 +7,10 @@ import { useSignMessage } from "wagmi";
 import { toast } from "react-toastify";
 import { get, post } from "../services/ApiService";
 import { useAccount } from "wagmi";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import ImageWithFallback from "../componants/common/ImageWithFallback";
+import { generateToken } from "../firebase/config";
 
 function EditProfile() {
   const { signMessageAsync } = useSignMessage();
@@ -19,6 +20,7 @@ function EditProfile() {
   const [isLoadingSkeleton, setLoadingSkeleton] = useState(false);
   const navigate = useNavigate();
   const [nftData, setNftData] = useState(null);
+  const [enableNotification, setEnableNotification] = useState(localStorage.getItem('fireBaseToken')?true:false); // State for notification checkbox
 
   const formik = useFormik({
     initialValues: {
@@ -27,8 +29,8 @@ function EditProfile() {
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .max(20, 'Must be 20 characters or less')
-        .required('Required')
+        .max(20, "Must be 20 characters or less")
+        .required("Required"),
     }),
     onSubmit: async (values) => {
       try {
@@ -74,6 +76,22 @@ function EditProfile() {
   useEffect(() => {
     getNFTdata();
   }, [id]);
+
+  // Function to handle checkbox change
+  const handleNotificationChange = async () => {
+   const permission =  await generateToken()
+    if (permission === "granted") {
+      setEnableNotification(true);
+    } else if (permission === "denied") {
+      setEnableNotification(false);
+    } else {
+      setEnableNotification(false);
+    }
+  };
+
+  useEffect(()=>{
+    handleNotificationChange()
+  },[enableNotification])
 
   return (
     <>
@@ -139,7 +157,7 @@ function EditProfile() {
                     <div className="grow-2 mt30">
                       <div className="mb10">
                         <input
-                         style={{color:"#b7b7b7"}}
+                          style={{ color: "#b7b7b7" }}
                           type="text"
                           className="btn btn-outline-primary m-b-10 text-uppercase"
                           name="name"
@@ -150,8 +168,10 @@ function EditProfile() {
                           value={formik.values.name}
                         />
                         {formik.touched.name && formik.errors.name ? (
-          <div style={{ color: '#ed1d26',marginTop:"6px" }}>{formik.errors.name}</div>
-        ) : null}
+                          <div style={{ color: "#ed1d26", marginTop: "6px" }}>
+                            {formik.errors.name}
+                          </div>
+                        ) : null}
                       </div>
 
                       <div className="social-media ml-4 mt-4 mb10">
@@ -165,9 +185,16 @@ function EditProfile() {
                           onBlur={formik.handleBlur}
                           value={formik.values.description}
                         ></textarea>
-                        {/* {formik.errors.description && (
-                        <p className="error">{formik.errors.description}</p>
-                      )} */}
+                      </div>
+
+                      <div className="mb-3 text-left text-white mb-">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={enableNotification}
+                          />{" "}
+                          Enable Notifications
+                        </label>
                       </div>
 
                       <div>

@@ -13,15 +13,16 @@ import BRABI from "../abis/breeding.json";
 import TOKEN_ABI from "../abis/ratbitsToken.json";
 import NFT_ABI from "../abis/nft.json";
 import { useAccount, useWriteContract } from "wagmi";
-import { waitForTransaction } from "../utils/waitForTransaction";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import ImageWithFallback from "../componants/common/ImageWithFallback";
 import ConfirmationYesNo from "../popups/ConfirmationYesNo";
 import CaretDisplay from "../componants/common/CaretDisplay";
+import useWaitForTransaction from "../hooks/useWaitForTransaction";
 
 
 function TargetSelect() {
+  const {waitForTransaction} = useWaitForTransaction()
   const { chainId, address } = useAccount();
   const { contractAddress, nftId, breedId } = useParams();
   const [isTransaction, setIsTransaction] = useState(false);
@@ -146,7 +147,7 @@ function TargetSelect() {
         setIsTransaction(false);
         toast.success("Send to breeding successfully.");
         navigate("/breeding-room?tab=0");
-      }, 30000);
+      }, 15000);
     } catch (error) {
       const result = await checkNftUnderBreeding(
         chainId,
@@ -154,7 +155,7 @@ function TargetSelect() {
         fromUser.nftId
       );
       if (result) {
-        toast.error("NFT under breeding you can't superLike");
+        toast.error("NFT already under breeding.");
       } else {
         toast.error(error.details || error.shortMessage);
       }
@@ -201,7 +202,7 @@ function TargetSelect() {
         setIsTransaction(false);
         toast.success("Send to breeding successfully.");
         navigate("/breeding-room?tab=1");
-      }, 30000);
+      }, 15000);
     } catch (error) {
       const result = await checkNftUnderBreeding(
         chainId,

@@ -1,6 +1,5 @@
 import Layout from "../componants/common/Layout"
 
-
 function PageNotFOund() {
   return (
 

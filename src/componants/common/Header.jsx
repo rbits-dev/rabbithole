@@ -37,7 +37,7 @@ function Header() {
   useEffect(() => {
     chainId &&
       setIsWrongWallet(!Object.keys(blockConfig).includes(chainId.toString()));
-      if(localStorage.getItem('oldChainId')!=chainId ||localStorage.getItem('oldChainId')==null ){
+      if(localStorage.getItem('oldChainId')!=chainId || localStorage.getItem('oldChainId')==null ){
         localStorage.setItem('oldChainId',chainId)
         localStorage.removeItem('userData')
         navigate('/')
@@ -48,6 +48,7 @@ function Header() {
         navigate('/')
       }
   }, [chainId,address]);
+
 
   return (
     <>

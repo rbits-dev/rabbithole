@@ -22,7 +22,7 @@ const AnimatedCard = forwardRef(({imagePath }, ref) => {
             });
             myConfetti({
                 particleCount: 100,
-                spread: 70,
+                spread: 100,
                 origin: { y: 0.7 },
                 zIndex: 1,
                 disableForReducedMotion: true,
@@ -64,9 +64,8 @@ const AnimatedCard = forwardRef(({imagePath }, ref) => {
                 <span  id="text" ref={textRef}>?</span>
                 <canvas ref={confettiRef} className="confetti-canvas"></canvas>
                  <img id="image" ref={imageRef} src={imagePath} alt="Placeholder" />
-    
-            </div>
-        </div>
+     </div>
+                </div>
     );
 })
 

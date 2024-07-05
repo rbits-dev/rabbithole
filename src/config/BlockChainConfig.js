@@ -13,7 +13,7 @@
         //     ra8BitsToken:"0x7C83ACCe4AA3c07c50a922f9Ab907B8D9b917080"
         // },
         84532:{
-            breedingAddress:"0x68C66cfE789a1b0ca44Ece120EB745DaaC5A5aa1",
+            breedingAddress:"0x228Bdfa4f7295b47f4Ee1d57601a8e7c6FC2Bed5",
             ra8BitsToken:"0x8Dd1B8a2fbC290bB286D58f241B148b906cCcE67"
         },
     }

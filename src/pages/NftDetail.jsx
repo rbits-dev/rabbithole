@@ -21,25 +21,26 @@ function NftDetail() {
   const [isLoadingSkeleton, setLoadingSkeleton] = useState(false);
   const navigate = useNavigate();
   const [nftData, setNftData] = useState(null);
-  
+
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
     },
-   
 
     validationSchema: Yup.object({
       name: Yup.string()
-    .required("Nickname is required")
-    .max(20, "Must be 20 characters or less"),
-  description: Yup.string().required("Description is required"),
-  
-}),
+        .required("Nickname is required")
+        .max(20, "Must be 20 characters or less"),
+      description: Yup.string().required("Description is required"),
+    }),
 
     onSubmit: async (values) => {
       try {
-        if (!nftData?.image) return toast.error('Unable to fetch NFT data. Please reload the page and try again.');
+        if (!nftData?.image)
+          return toast.error(
+            "Unable to fetch NFT data. Please reload the page and try again."
+          );
         setLoading(true);
         const sign = await signMessageAsync({
           message: JSON.stringify(values),
@@ -90,14 +91,19 @@ function NftDetail() {
       const result = await axios.get(url);
       setNftData(result.data);
       if (result.data && result.data.description) {
-        formik.setFieldValue('description', result.data.description);
-        formik.setFieldValue('name', result.data.name);
+        formik.setFieldValue("description", result.data.description);
+        formik.setFieldValue("name", cleanUpName(result.data.name));
       }
       setLoadingSkeleton(false);
     } catch (error) {
       setLoadingSkeleton(false);
       console.log(error);
     }
+  };
+
+  const cleanUpName = (inputString) => {
+    let cleanedString = inputString.replace(/Ra8bit\s*#?\d*\s*/, "");
+    return cleanedString
   };
 
   useEffect(() => {
@@ -111,9 +117,7 @@ function NftDetail() {
           <div className="">
             <div className="title">
               <div className="heading text-white">
-                <h3 className="headings text-uppercase">
-                  Set up your profile
-                </h3>
+                <h3 className="headings text-uppercase">Set up your profile</h3>
               </div>
             </div>
             <div className="section section-nft">
@@ -127,7 +131,6 @@ function NftDetail() {
                       </p>
                     </div>
                     <CaretDisplay value={1} />
-                    
                   </div>
                   <div className="nft-box nft-select-box border-top-0">
                     {!isLoadingSkeleton && (
@@ -150,7 +153,10 @@ function NftDetail() {
                   </div>
                   <div className="mt20 mb20">
                     <h4 className="text-white head">{nftData?.name}</h4>
-                    <h4 className="text-white" style={{ marginTop: "0px !important" }}>
+                    <h4
+                      className="text-white"
+                      style={{ marginTop: "0px !important" }}
+                    >
                       {nftData?.description}
                     </h4>
                   </div>
@@ -159,40 +165,47 @@ function NftDetail() {
                   <div className="grow-2 mt30">
                     <div className="mb10">
                       <input
-                      style={{color:"#b7b7b7"}}
+                        style={{ color: "#b7b7b7" }}
                         type="text"
                         className="btn btn-outline-primary m-b-10 text-uppercase"
                         name="name"
                         placeholder={formik.values.name ? "" : "Nickname"}
                         id="name"
                         onChange={formik.handleChange}
-                        onFocus={() => formik.setFieldValue('name', '')}
+                        onFocus={() => formik.setFieldValue("name", "")}
                         onBlur={(e) => {
                           if (!e.target.value) {
-                            formik.setFieldValue('name', nftData?.name || "");
+                            formik.setFieldValue("name", cleanUpName(nftData?.name) || "");
                           }
                           formik.handleBlur(e);
                         }}
                         value={formik.values.name}
                       />
-                 {formik.touched.name && formik.errors.name ? (
-          <div style={{ color: '#ed1d26',marginTop:"6px" }}>{formik.errors.name}</div>
-        ) : null}
+                      {formik.touched.name && formik.errors.name ? (
+                        <div style={{ color: "#ed1d26", marginTop: "6px" }}>
+                          {formik.errors.name}
+                        </div>
+                      ) : null}
                     </div>
 
                     <div className="social-media ml-4 mt-4 mb10">
                       <textarea
-                       style={{color:"#b7b7b7"}}
+                        style={{ color: "#b7b7b7" }}
                         rows="10"
-                        placeholder={formik.values.description ? "" : "Description"}
+                        placeholder={
+                          formik.values.description ? "" : "Description"
+                        }
                         id="description"
                         className="btn btn-outline-primary text-uppercase text-center m-t-0"
                         name="description"
                         onChange={formik.handleChange}
-                        onFocus={() => formik.setFieldValue('description', '')}
+                        onFocus={() => formik.setFieldValue("description", "")}
                         onBlur={(e) => {
                           if (!e.target.value) {
-                            formik.setFieldValue('description', nftData?.description || "");
+                            formik.setFieldValue(
+                              "description",
+                              nftData?.description || ""
+                            );
                           }
                           formik.handleBlur(e);
                         }}

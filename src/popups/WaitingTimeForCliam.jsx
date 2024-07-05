@@ -5,13 +5,15 @@ import BRABI from "../abis/breeding.json";
 import { useEffect, useState } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import { post } from "../services/ApiService";
-import { waitForTransaction } from "../utils/waitForTransaction";
 import { toast } from "react-toastify";
 import PopupModals from "../componants/common/PopupModals";
 import ConfirmationDialog from "../popups/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import useWaitForTransaction from "../hooks/useWaitForTransaction";
 
 function WaitingTimeForCliam({ item, isType,apiCall }) {
+  const {waitForTransaction} = useWaitForTransaction()
+
   const userData =
     localStorage.getItem("userData") &&
     JSON.parse(localStorage.getItem("userData"));
@@ -86,7 +88,7 @@ function WaitingTimeForCliam({ item, isType,apiCall }) {
         toast.success("Nft token claim successfully.");
         setIsTransaction(false);
          apiCall()
-      }, 30000);
+      }, 15000);
     } catch (error) {
       setIsTransaction(false);
       setTxMessage("Please Wait...");
@@ -138,7 +140,7 @@ function WaitingTimeForCliam({ item, isType,apiCall }) {
         navigate(`/selected-target/${item.contractAddress}/${item.nftId}/0`);
         setIsTransaction(false);
         apiCall()
-      }, 30000);
+      }, 15000);
     } catch (error) {
       setIsTransaction(false);
       setTxMessage("Please Wait...");
@@ -189,7 +191,7 @@ function WaitingTimeForCliam({ item, isType,apiCall }) {
         setIsTransaction(false);
         apiCall()
 
-      }, 30000);
+      }, 15000);
     } catch (error) {
       setIsTransaction(false);
       setTxMessage("Please Wait...");

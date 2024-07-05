@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import PopupModals from "../componants/common/PopupModals";
 import ConfirmationDialog from "./ConfirmationDialog";
-import { waitForTransaction } from "../utils/waitForTransaction";
 import { toast } from "react-toastify";
 import { blockConfig } from "../config/BlockChainConfig";
 import BRABI from "../abis/breeding.json";
 import { post } from "../services/ApiService";
+import useWaitForTransaction from "../hooks/useWaitForTransaction";
 
 function WaitingTimeConvertForUnderBreeding({
   item,
@@ -14,6 +14,8 @@ function WaitingTimeConvertForUnderBreeding({
   apiCall,
   setIsShowAnimi
 }) {
+  const {waitForTransaction} = useWaitForTransaction()
+  
   const { chainId } = useAccount();
   const [days, setDays] = useState("--");
   const [hours, setHours] = useState("--");
@@ -48,7 +50,6 @@ function WaitingTimeConvertForUnderBreeding({
         } else {
           toast.success("Nft claim successfully.");
         }
-        debugger
         setIsTransaction(false);
         if (setIsShowAnimi) {
           setIsShowAnimi(true)

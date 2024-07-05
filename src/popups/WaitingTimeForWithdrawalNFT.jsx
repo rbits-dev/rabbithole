@@ -5,12 +5,14 @@ import BRABI from "../abis/breeding.json";
 import { useEffect, useState } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import { post } from "../services/ApiService";
-import { waitForTransaction } from "../utils/waitForTransaction";
 import { toast } from "react-toastify";
 import PopupModals from "../componants/common/PopupModals";
 import ConfirmationDialog from "../popups/ConfirmationDialog";
+import useWaitForTransaction from "../hooks/useWaitForTransaction";
 
 function WaitingTimeForWithdrawalNFT({ item,apiCall }) {
+  const {waitForTransaction} = useWaitForTransaction()
+
   const { chainId } = useAccount();
   const [days, setDays] = useState("--");
   const [hours, setHours] = useState("--");
@@ -57,7 +59,7 @@ function WaitingTimeForWithdrawalNFT({ item,apiCall }) {
          apiCall()
         toast.success("Nft token claim successfully.");
         setIsTransaction(false);
-      }, 30000);
+      }, 15000);
     } catch (error) {
       setIsTransaction(false);
       setTxMessage("Please Wait...");

@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import WaitingTimeConvertForUnderBreeding from "../popups/WaitingTimeConvertForUnderBreeding";
-// import CaretDisplay from "../componants/common/CaretDisplay";
 import AnimatedCard from '../componants/AnimatedCard';
 import CaretDisplay from "../componants/common/CaretDisplay";
 
@@ -134,7 +133,7 @@ function BInprogrss() {
             <div className="waveWrapper banner  waveAnimation waveprofile">
               <div className="text-center divide-area w-100">
                 <div className="info info-breeding">
-                  {BreedStatus}
+                  <BreedStatus/>
                   {breedData?.isClaim == 0 && (
                     <div className="userImage" style={userImageStyle}>
                       {hasBreedReady && (
@@ -195,7 +194,7 @@ function BInprogrss() {
                     )}
 
                   <div className="head mt15">
-                    <h2 className="text-white head mb0">
+                    <h2 className="text-white head mb0" style={{lineHeight:"28px"}}>
                       {breedData?.isPaying == true &&
                         breedData?.isClaim == 1 &&
                         breedData.isDead
@@ -260,7 +259,7 @@ function BInprogrss() {
                     <div className="button-contaier">
                       <div className="confirm progress-confirm">
                         <Link
-                          to={`/generation-chart/${breedData?.contractAddress}/${breedData?.nftId}`}
+                          to={`/generation-chart/${breedingMetaData?.gen1NftAddress}/${breedingMetaData?.gen1nftId}`}
                           type="button"
                           className="btn btn-warning"
                           style={{ display: "inline-block" }}

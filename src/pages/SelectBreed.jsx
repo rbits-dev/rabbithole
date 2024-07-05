@@ -2,29 +2,29 @@ import Layout from "../componants/common/Layout";
 import React, { useMemo, useRef, useState } from "react";
 import { get, post } from "../services/ApiService";
 import { useEffect } from "react";
-import { useAccount, useSignMessage, useWriteContract } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { toast } from "react-toastify";
 import BRABI from "../abis/breeding.json";
 import TOKEN_ABI from "../abis/ratbitsToken.json";
 import { blockConfig } from "../config/BlockChainConfig";
 import { readContract } from "@wagmi/core";
 import { checkNftUnderBreeding, configRead, getCollectionName } from "../App";
-import { waitForTransaction } from "../utils/waitForTransaction";
 import PopupModals from "../componants/common/PopupModals";
 import { useNavigate } from "react-router";
 import ConfirmationDialog from "../popups/ConfirmationDialog";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import TinderCard from "../componants/common/cardStack";
+import useWaitForTransaction from "../hooks/useWaitForTransaction";
 
 function SelectBreed() {
+  const {waitForTransaction} = useWaitForTransaction()
   const [isTransaction, setIsTransaction] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isUpgrade, setIsUpgrade] = useState(false);
   const [txMessage, setTxMessage] = useState("Please wait...");
   const { writeContractAsync } = useWriteContract();
   const { chainId, address } = useAccount();
-  const { signMessageAsync } = useSignMessage();
   const [currentIndex, setCurrentIndex] = useState();
   const navigate = useNavigate();
   const userData =
@@ -44,7 +44,6 @@ function SelectBreed() {
 
   const getProfileListing = async () => {
     try {
-      setIsLoading(true);
       const result = await get("nft-profile-listing");
       for (let item of result.data.data) {
         const collectionName = await getCollectionNameData(
@@ -56,11 +55,11 @@ function SelectBreed() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log();
     }
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getProfileListing();
     checkToUpgradePlan();
   }, []);
@@ -80,7 +79,8 @@ function SelectBreed() {
   };
 
   const outOfFrame = (dir, item, idx) => {
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard();
+   
+    currentIndexRef.current >= idx &&childRefs.length>0 && childRefs[idx].current.restoreCard();
     if (dir === "left") return handleDislike(item, idx);
     if (dir === "right") return handleLike(item, idx);
     if (dir === "up") return handleSuperLike(item, idx);
@@ -97,7 +97,9 @@ function SelectBreed() {
     // if (!canGoBack) return
 
     updateCurrentIndex(currentIndex);
-    await childRefs[currentIndex].current.restoreCard();
+    if(childRefs.length>0){
+      await childRefs[currentIndex].current.restoreCard();
+    }
   };
 
   const handleDislike = async (item, index) => {
@@ -117,17 +119,16 @@ function SelectBreed() {
 
   const handleLike = async (item, index) => {
     try {
-      const message = JSON.stringify({
-        userId: item.userId?.toString(),
-        userAddress: address,
-      });
-      const signature = await signMessageAsync({
-        message: message,
-      });
+      // const message = JSON.stringify({
+      //   userId: item.userId?.toString(),
+      //   userAddress: address,
+      // });
+      // const signature = await signMessageAsync({
+      //   message: message,
+      // });
       const result = await post("like-nft", {
         chainId,
         userId: item.userId?.toString(),
-        signature,
       });
       toast.success(result.data.message);
       getProfileListing();
@@ -191,8 +192,8 @@ function SelectBreed() {
         checkToUpgradePlan();
       }, 10000);
     } catch (error) {
-      await goBack();
       setIsTransaction(false);
+      await goBack();
       setTxMessage("Please wait...");
       const result = await checkNftUnderBreeding(
         chainId,
@@ -202,6 +203,7 @@ function SelectBreed() {
       if (result) {
         toast.error("NFT under breeding you can't superLike");
       } else {
+        console.log(error);
         toast.error(error.details || error.shortMessage);
       }
     }
@@ -232,7 +234,6 @@ function SelectBreed() {
       await waitForTransaction(approval);
       return approval;
     } catch (error) {
-      toast.error(error.details);
       throw error;
     }
   };
@@ -301,7 +302,7 @@ function SelectBreed() {
         getProfileListing();
         setIsUpgrade(false);
         setIsTransaction(false);
-      }, 30000);
+      }, 15000);
     } catch (error) {
       setIsTransaction(false);
       console.log(error);

@@ -72,7 +72,7 @@ function GenerationDetails({ data,onClose }) {
                   baseColor="#0905149c"
                   highlightColor="#321241d4"
                   width={274}
-                  height={274}
+                  height={385}
                 />
               )}
             </div>

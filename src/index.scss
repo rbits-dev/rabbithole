@@ -8320,6 +8320,11 @@ body::-webkit-scrollbar {
     position: absolute;
     top: 25%
 }
+.question-nft{
+    position: absolute;
+    top: 32%;
+    left: 35%;
+}
 
 @media (min-width:1600px) {
     .nav-tabs {
@@ -8370,8 +8375,8 @@ body::-webkit-scrollbar {
     }
     .question-nft{
         position: absolute;
-        top: 38%;
-        left: 40%;
+        top: 38% !important;
+        left: 40% !important;
     }
 }
 @media (min-width:1600px){
@@ -8382,6 +8387,7 @@ body::-webkit-scrollbar {
         height: 400px;
      }
 }
+
 @media (min-width:2000px) {
     .userImage{
         height:450px
@@ -8816,4 +8822,29 @@ body::-webkit-scrollbar {
 //   .zoom-in {
 //     animation: zoomIn 1s forwards;
 //   }
-  
+ 
+@media (max-width:500px) {
+    .tree1 {
+        position: fixed;
+        top: 14%;
+        overflow: auto;
+      bottom: 0;
+      
+    }
+    .tree1::-webkit-scrollbar{
+        display: none;
+    }
+    .section-nft-tree{
+        overflow: auto !important;
+    }
+    .section-nft-tree::-webkit-scrollbar{
+        display: none;
+    }
+
+}
+.inner-breeding-tree{
+    max-width: 1200px;
+}
+.inner-breeding-tree .intro{
+    max-width: 1200px;
+}
